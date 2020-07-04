@@ -167,7 +167,6 @@ radio_button_chooser <- function(model.chooser){
   return(model.choose)
   
 }
-
 gui_element <- function(gui){
   modelpath <- paste0(netlogopath, "/app/models/Sample Models/Biology/",gui)
   modeltype <- paste(modelpath, ".nlogo", sep="")
@@ -175,7 +174,6 @@ gui_element <- function(gui){
   a <- nldoc_table_gui(modelfiles)
   return(a)
 }
-
 read_element <- function(gui){
   modelpath <- paste0(netlogopath, "/app/models/Sample Models/Biology/",gui)
   modeltype <- paste(modelpath, ".nlogo", sep="")
@@ -183,8 +181,6 @@ read_element <- function(gui){
   a <- nldoc_read_nlogo(modelfiles)
   return(a)
 }
-
-
 create_experiment_setup <- function(modelfiles,userinput){
   modeldata.names <- list()
   a <- userinput["names"][[1]]
@@ -205,7 +201,6 @@ create_experiment_setup <- function(modelfiles,userinput){
   return(modelfiles)
   
 }
-
 separate.function <- function(modelfiles, userinput){
   modeldata.names <- list()
   modeldata.value <- list()
@@ -231,19 +226,37 @@ separate.function <- function(modelfiles, userinput){
         {
           if(b[i] == TRUE)
           {
-            constant.name <- as.character(modeldata.names[j])
-            constant.value <- modeldata.value[j]
-            constants[constant.name] = constant.value
+            for(k in seq(length(a)))
+            {
+              if(a[k] == paste0(as.character(c1),'_value'))
+              {
+                
+                constant.name <- as.character(modeldata.names[j])
+                constant.value <- b[k]
+                constants[constant.name] = constant.value
+                
+              }
+            }
+            
           }
           else
           {
             if(modelfiles[[j]][1] == "SLIDER")
             {
               variable.name <- as.character(modeldata.names[j])
+              vari.min = NULL
+              vari.max = NULL
+              vari.qfun = NULL
+              vari.step = NULL
+              for(k in seq(length(a))){if(a[k] == paste0(as.character(c1),'_min')){vari.min = as.numeric(b[k])}}
+              for(k in seq(length(a))){if(a[k] == paste0(as.character(c1),'_max')){vari.max = as.numeric(b[k])}}
+              for(k in seq(length(a))){if(a[k] == paste0(as.character(c1),'_qfun')){vari.qfun = b[k]}}
+              for(k in seq(length(a))){if(a[k] == paste0(as.character(c1),'_step')){vari.step = as.numeric(b[k])}}
               entry <- list(
-                min = as.numeric(modelfiles[[j]][4]),
-                max = as.numeric(modelfiles[[j]][5]),
-                qfun = "qunif")
+                min = vari.min,
+                max = vari.max,
+                qfun = vari.qfun,
+                step = vari.step)
               variables[[variable.name]] <- entry
             }
           }
@@ -253,7 +266,6 @@ separate.function <- function(modelfiles, userinput){
   }
   return(list("constants"=constants,"variabes"=variables))
 }
-
 cal_matrics <- function(modelfiles,userinput){
   modeldata.type <- list()
   modeldata.label <- list()
@@ -546,7 +558,6 @@ util_print.simdesign <- function(x, ...){
 ################END PRINT FUNCTION####
 
 
-
 #######################INFO TAB###########
 ##############################
 nldoc_read_nlogo <- function(modelfiles)
@@ -595,6 +606,4 @@ nldoc_read_nlogo <- function(modelfiles)
   
   return(nlogocode)
 }
-
-
 ##################################end info tab
